@@ -8,8 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver.OnPreDrawListener;
 
 import com.elsapp.easyloan.Adapter.Chat_Adapter;
+import com.elsapp.easyloan.Utility.SessionManager;
 import com.elsapp.easyloan.model.Message;
 
 import java.util.ArrayList;
@@ -20,14 +23,23 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Context context;
     ArrayList<Message> chats;
+    int topflag=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         context=this;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+        if(SessionManager.getStringFromPreferences(context,"loantype").equals("Vehicle")) {
+            toolbar.setTitle("Vehicle Loan");
+        }
+        else
+        toolbar.setTitle("Home Loan");
+        setSupportActionBar(toolbar);
 
 
         recyclerView=(RecyclerView)findViewById(R.id.recyclerview);
@@ -35,7 +47,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
         chats=prepareChat();
+
+        launchAnimation(recyclerView,0);
+
+
+
         recyclerView.setAdapter(new Chat_Adapter(context,chats));
+
 
 
 
@@ -93,24 +111,48 @@ public class MainActivity extends AppCompatActivity {
         chats.add(m);
 
 
-        /*
-        m=new Message();
-        m.setMessage("I live in Mumbai");
-        m.setRank("top");
-        m.setType("user");
-        m.setId(3);
-        chats.add(m);
-        m=new Message();
-        m.setMessage("Nice to meet you");
-        m.setRank("follow");
-        m.setType("user");
-        m.setId(4);
-        chats.add(m);
-        */
 
         return chats;
 
 
+
+
+    }
+
+
+
+    //CUSTOM CLASS TO ANIMATE EVERY RECYCLER ITEM AS AND WHEN IT IS ADDED IN THE DATA SET.
+    //IMPORTANT.
+    public void launchAnimation(final RecyclerView recycler,final int position) {
+
+        recycler.getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                recycler.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                int count=0;
+                for (int i = position; i < recycler.getChildCount(); i++) {
+                    View v = recycler.getChildAt(i);
+
+                        count++;
+                        v.setAlpha(0.0f);
+                        v.animate().alpha(1.0f)
+                                .setDuration(400)
+                                .setStartDelay(i * 200)
+                                .start();
+
+                }
+                //
+                // Toast.makeText(context,count+"",Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
+    }
+
+
+    public RecyclerView getRecyclerView(){
+        return recyclerView;
 
 
     }

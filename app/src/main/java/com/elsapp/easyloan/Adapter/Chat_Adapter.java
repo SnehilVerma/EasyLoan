@@ -12,12 +12,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.elsapp.easyloan.MainActivity;
 import com.elsapp.easyloan.R;
+import com.elsapp.easyloan.Utility.SessionManager;
 import com.elsapp.easyloan.model.Message;
 
 import java.text.SimpleDateFormat;
@@ -29,7 +35,7 @@ import java.util.Locale;
  * Created by snehil on 29/6/17.
  */
 
-
+//MAIN CLASS FOR QEC FUNCTIONALITY.
 //PLEASE KEEP A TABLE READY FOR THE NUMBER AND COUNT OF MESSAGES WHICH ARE TO BE USED.
 //THE FLOW IS BASED ON THE ID OF EACH MESSAGE WHICH IS NOTHING BUT THE INORDER NUMBERING OF MESSAGES STARTING FRM 0.
 
@@ -39,6 +45,9 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
     private Context context;
     Calendar myCalendar = Calendar.getInstance();   //for DOB.
 
+    //FOR ANIMATION
+    private final static int FADE_DURATION = 1000;
+    private int lastposition=-1;
 
     public Chat_Adapter(Context context, ArrayList<Message> items) {
         this.chats = items;
@@ -73,6 +82,7 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
         }
 
 
+
         return new ViewHolder(view);
 
     }
@@ -82,6 +92,15 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
     public void onBindViewHolder(final Chat_Adapter.ViewHolder holder, final int position) {
 
         holder.botmessage.setText(chats.get(position).getMessage());
+
+
+        //FETCH CURRENT RECYCLER VIEW INSTANCE WITH UPDATE STATUS AND PASS IT TO LAUNCH ANIMATION
+        RecyclerView recyclerView=((MainActivity)context).getRecyclerView();
+        ((MainActivity)context).launchAnimation(recyclerView,position);
+
+
+
+
         holder.linearLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -254,6 +273,7 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
 
                 //FOR GENDER.
                 if(chats.get(position).getId()==4) {
+
                     final Dialog dialog = new Dialog(context);
                     dialog.setContentView(R.layout.popup_gender);
                     dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -423,6 +443,127 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                     }
                 }
 
+                if(chats.get(position).getId()==8){
+                    if(chats.size()==9){
+                        final Dialog dialog = new Dialog(context);
+                        dialog.setContentView(R.layout.popup_vehicle_select);
+                        dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        ImageView im1, im2;
+
+                        im1=(ImageView)dialog.findViewById(R.id.car);
+                        im2=(ImageView)dialog.findViewById(R.id.bike);
+
+                        im1.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("I want a four wheeler");
+                                SessionManager.putStringInPreferences(context,"Car","vehicle_type");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(9);
+                                addMessage(m);
+                                dialog.dismiss();
+                                launchCarType();
+
+                            }
+                        });
+                        im2.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("I want a two wheeler");
+                                SessionManager.putStringInPreferences(context,"Bike","vehicle_type");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(9);
+                                addMessage(m);
+                                dialog.dismiss();
+                                launchBikeType();
+
+
+
+                            }
+                        });
+
+                        dialog.show();
+
+
+                    }else if(chats.size()>9){
+                        final Dialog dialog = new Dialog(context);
+                        dialog.setContentView(R.layout.popup_vehicle_select);
+                        dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        ImageView im1, im2;
+
+                        im1=(ImageView)dialog.findViewById(R.id.car);
+                        im2=(ImageView)dialog.findViewById(R.id.bike);
+
+                        im1.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(SessionManager.getStringFromPreferences(context,"vehicle_type").equals("Bike")) {
+                                    chats.subList(9,chats.size()).clear();
+                                    notifyDataSetChanged();
+
+
+
+                                    Message m = new Message();
+                                    m.setMessage("I want a four wheeler");
+                                    SessionManager.putStringInPreferences(context,"Car","vehicle_type");
+                                    m.setType("user");
+                                    m.setRank("top");
+                                    addMessage(m);
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+                                    launchCarType();
+                                }
+                                else{
+                                    dialog.dismiss();
+
+                                }
+
+
+                            }
+                        });
+                        im2.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(SessionManager.getStringFromPreferences(context,"vehicle_type").equals("Car")) {
+                                    chats.subList(9, chats.size()).clear();
+                                    notifyDataSetChanged();
+
+                                    Message m = new Message();
+                                    m.setMessage("I want a two wheeler");
+                                    SessionManager.putStringInPreferences(context,"Bike","vehicle_type");
+                                    m.setType("user");
+                                    m.setRank("top");
+                                    m.setId(9);
+                                    addMessage(m);
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+                                    launchBikeType();
+
+                                }
+                                else{
+                                    dialog.dismiss();
+
+                                }
+
+
+                            }
+                        });
+
+                        dialog.show();
+
+
+
+                    }
+
+
+                }
+
 
             }
         });
@@ -505,6 +646,28 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
     }
 
 
+    public void launchCarType(){
+        Message m=new Message();
+        m.setMessage("Tap here to choose a car type");
+        m.setType("bot");
+        m.setRank("top");
+        m.setId(10);
+        addMessage(m);      //PUSHBACK TO DATA SET.
+
+
+    }
+    public void launchBikeType(){
+        Message m=new Message();
+        m.setMessage("Tap here to choose a bike type");
+        m.setType("bot");
+        m.setRank("top");
+        m.setId(10);
+        addMessage(m);      //PUSHBACK TO DATA SET.
+
+
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateLabel() {
 
@@ -539,6 +702,37 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
 
 
 
+    }
+
+
+    //ANIMATION FUNCTION. CHANGE THE DESIRED ANIM. AS PER REQUIREMENTS.
+    private void setFadeAnimation(View view) {
+        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(FADE_DURATION);
+        view.startAnimation(anim);
+    }
+
+    //SCALE ANIMATION.
+    private void setScaleAnimation(View view,int position) {
+
+        if (position > lastposition) {
+            ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim.setDuration(FADE_DURATION);
+            view.startAnimation(anim);
+            lastposition = position;
+
+        }
+    }
+
+
+    private void setSlideAnimation(View view,int position) {
+
+        if (position > lastposition) {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            view.startAnimation(animation);
+            lastposition = position;
+
+        }
     }
 
 
