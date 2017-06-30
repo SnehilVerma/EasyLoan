@@ -160,7 +160,7 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                             @Override
                             public void onClick(View view) {
                                 Message m = new Message();
-                                m.setMessage("I live in others");
+                                m.setMessage("I live in others");       //TODO: OTHERS FUNCTIONALITY NOT IMPLEMENTED.
                                 m.setType("user");
                                 m.setRank("top");
                                 addMessage(m);
@@ -173,8 +173,6 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                         im1.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                for(Message x:chats){
-                                    if(x.getId()==3){
 
                                         Message m=new Message();
                                         m.setMessage("I live in Mumbai");
@@ -184,9 +182,7 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                                         notifyDataSetChanged();
 
 
-                                    }
 
-                                }
                                 dialog.dismiss();
 
                             }
@@ -194,9 +190,6 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                         im2.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                for(Message x:chats){
-                                    if(x.getId()==3){
-
                                         Message m=new Message();
                                         m.setMessage("I live in New Delhi");
                                         m.setType("user");
@@ -205,17 +198,12 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                                         notifyDataSetChanged();
 
 
-                                    }
-
-                                }
                                 dialog.dismiss();
                             }
                         });
                         im3.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                for(Message x:chats){
-                                    if(x.getId()==3){
 
                                         Message m=new Message();
                                         m.setMessage("I live in Bengaluru");
@@ -224,10 +212,6 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                                         chats.set(3,m);
                                         notifyDataSetChanged();
 
-
-                                    }
-
-                                }
                                 dialog.dismiss();
 
                             }
@@ -235,9 +219,6 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                         im4.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                for(Message x:chats){
-                                    if(x.getId()==3){
-
                                         Message m=new Message();
                                         m.setMessage("I live in Agra");
                                         m.setType("user");
@@ -245,18 +226,12 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                                         chats.set(3,m);
                                         notifyDataSetChanged();
 
-
-                                    }
-
-                                }
                                 dialog.dismiss();
                             }
                         });
                         im5.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                for(Message x:chats){
-                                    if(x.getId()==3){
 
                                         Message m=new Message();
                                         m.setMessage("I live in others");
@@ -265,10 +240,6 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                                         chats.set(3,m);
                                         notifyDataSetChanged();
 
-
-                                    }
-
-                                }
                                 dialog.dismiss();
                             }
                         });
@@ -292,50 +263,103 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                     im1=(ImageView)dialog.findViewById(R.id.male);
                     im2=(ImageView)dialog.findViewById(R.id.female);
                     im3=(ImageView)dialog.findViewById(R.id.others);
-                    im1.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Message m=new Message();
-                            m.setMessage("I am a Male");
-                            m.setType("user");
-                            m.setRank("top");
-                            m.setId(5);
-                            addMessage(m);
-                            dialog.dismiss();
-                            launchDOB();
-                        }
-                    });
-                    im2.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Message m=new Message();
-                            m.setMessage("I am a Female");
-                            m.setType("user");
-                            m.setRank("top");
-                            m.setId(5);
-                            addMessage(m);
-                            dialog.dismiss();
-                            launchDOB();
 
-                        }
-                    });
-                    im3.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Message m=new Message();
-                            m.setMessage("Others");
-                            m.setType("user");
-                            m.setRank("top");
-                            m.setId(5);
-                            addMessage(m);
-                            dialog.dismiss();
-                            launchDOB();
 
-                        }
-                    });
 
-                dialog.show();
+                    if(chats.size()==5) {
+                        im1.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("I am a Male");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(5);
+                                addMessage(m);
+                                dialog.dismiss();
+                                launchDOB();
+                            }
+                        });
+                        im2.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("I am a Female");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(5);
+                                addMessage(m);
+                                dialog.dismiss();
+                                launchDOB();
 
+                            }
+                        });
+                        im3.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("Others");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(5);
+                                addMessage(m);
+                                dialog.dismiss();
+                                launchDOB();
+
+                            }
+                        });
+
+                        dialog.show();
+                    }
+                    else if(chats.size()>5){        //REPLACE EXISTING GENDER
+
+                        im1.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("I am a Male");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(5);
+                                chats.set(5,m);
+                                notifyDataSetChanged();
+                                dialog.dismiss();
+
+                            }
+                        });
+                        im2.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("I am a Female");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(5);
+                                chats.set(5,m);
+                                notifyDataSetChanged();
+                                dialog.dismiss();
+
+
+                            }
+                        });
+                        im3.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("Others");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(5);
+                                chats.set(5,m);
+                                notifyDataSetChanged();
+                                dialog.dismiss();
+
+
+                            }
+                        });
+
+                        dialog.show();
+                    }
                 }
 
 
