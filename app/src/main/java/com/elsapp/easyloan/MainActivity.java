@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
         chats=prepareChat();
-
-        launchAnimation(recyclerView,0);
+        
 
 
 
@@ -134,16 +133,13 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = position; i < recycler.getChildCount(); i++) {
                     View v = recycler.getChildAt(i);
 
-                        count++;
                         v.setAlpha(0.0f);
                         v.animate().alpha(1.0f)
                                 .setDuration(400)
-                                .setStartDelay(i * 200)
+                                .setStartDelay(i * 100)
                                 .start();
 
                 }
-                //
-                // Toast.makeText(context,count+"",Toast.LENGTH_SHORT).show();
 
                 return true;
             }

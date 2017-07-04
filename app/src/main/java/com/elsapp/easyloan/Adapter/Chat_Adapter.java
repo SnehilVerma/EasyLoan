@@ -16,10 +16,16 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.elsapp.easyloan.MainActivity;
 import com.elsapp.easyloan.R;
@@ -28,6 +34,7 @@ import com.elsapp.easyloan.model.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -44,6 +51,8 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
     private ArrayList<Message> chats;
     private Context context;
     Calendar myCalendar = Calendar.getInstance();   //for DOB.
+    ArrayList<String> city_names;
+
 
     //FOR ANIMATION
     private final static int FADE_DURATION = 1000;
@@ -96,7 +105,14 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
 
         //FETCH CURRENT RECYCLER VIEW INSTANCE WITH UPDATE STATUS AND PASS IT TO LAUNCH ANIMATION
         RecyclerView recyclerView=((MainActivity)context).getRecyclerView();
-        ((MainActivity)context).launchAnimation(recyclerView,position);
+
+
+        if(position>lastposition) {
+            ((MainActivity) context).launchAnimation(recyclerView, position);
+            lastposition=position;
+        }
+        //the above code ensures animation takes place only for new set of chats and if previous data is edited animation
+        //doesnt re-render everything.
 
 
 
@@ -178,13 +194,45 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                         im5.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Message m = new Message();
-                                m.setMessage("I live in others");       //TODO: OTHERS FUNCTIONALITY NOT IMPLEMENTED.
-                                m.setType("user");
-                                m.setRank("top");
-                                addMessage(m);
-                                dialog.dismiss();
-                                launchGender();
+                                city_names =new ArrayList<>(Arrays.asList("Kanpur","Lucknow","Bengaluru","Patna","Surat","Kota","Jaipur","Pune","Panaji"));
+                                final Dialog dialog2=new Dialog(context);
+                                dialog2.setContentView(R.layout.popup_other_cities);
+                                dialog2.setTitle("Choose a city");
+                                //dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+                                final AutoCompleteTextView city = (AutoCompleteTextView) dialog2.findViewById(R.id.cityedit);
+                                ArrayAdapter<String> adapterone = new ArrayAdapter<String>(context,R.layout.city_item,R.id.list_content, city_names);
+                                //ArrayAdapter<String> adapter2=new ArrayAdapter<String>(context,android.R.layout.simple_dropdown_item_1line,city_names);
+                                ListView cities=(ListView)dialog2.findViewById(R.id.List);
+
+
+                                cities.setAdapter(adapterone);
+                                city.setAdapter(adapterone);
+                                city.setDropDownHeight(0);
+
+                                dialog2.show();
+
+                                cities.setOnItemClickListener(new OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                        String res=adapterView.getAdapter().getItem(i).toString();
+
+                                        Message m=new Message();
+                                        m.setMessage("I live in "+res);
+                                        m.setType("user");
+                                        m.setRank("top");
+                                        m.setId(3);
+                                        addMessage(m);
+                                        notifyDataSetChanged();
+                                        dialog2.dismiss();
+                                        dialog.dismiss();
+                                        launchGender();
+                                    }
+                                });
+
+
+
+
                             }
                         });
 
@@ -251,15 +299,48 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                         im5.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
+                                /*
                                         Message m=new Message();
                                         m.setMessage("I live in others");
                                         m.setType("user");
                                         m.setRank("top");
                                         chats.set(3,m);
                                         notifyDataSetChanged();
+                                */
 
-                                dialog.dismiss();
+                                city_names =new ArrayList<>(Arrays.asList("Kanpur","Lucknow","Bengaluru","Patna","Surat","Kota","Jaipur","Pune","Panaji"));
+                                final Dialog dialog2=new Dialog(context);
+                                dialog2.setContentView(R.layout.popup_other_cities);
+                                dialog2.setTitle("Choose a city");
+                                final AutoCompleteTextView city = (AutoCompleteTextView) dialog2.findViewById(R.id.cityedit);
+                                final ArrayAdapter<String> adapterone = new ArrayAdapter<String>(context,R.layout.city_item,R.id.list_content, city_names);
+                                ListView cities=(ListView)dialog2.findViewById(R.id.List);
+                                city.setDropDownHeight(0);
+                                //final City_Adapter adapter=new City_Adapter(getContext(),R.layout.name_view,city_names);
+                                cities.setAdapter(adapterone);
+                                city.setAdapter(adapterone);
+                                dialog2.show();
+
+
+
+                                cities.setOnItemClickListener(new OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                        String res=adapterView.getAdapter().getItem(i).toString();
+                                        Message m=new Message();
+                                        m.setMessage("I live in "+res);
+                                        m.setType("user");
+                                        m.setRank("top");
+                                        chats.set(3,m);
+                                        notifyDataSetChanged();
+                                        dialog2.dismiss();
+                                        dialog.dismiss();
+
+                                    }
+                                });
+
+
+
                             }
                         });
 
@@ -504,6 +585,8 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                             @Override
                             public void onClick(View view) {
                                 if(SessionManager.getStringFromPreferences(context,"vehicle_type").equals("Bike")) {
+
+                                    //SUBLISTING. IMPORTANT TO REMOVE ALREADY INCLUDED FRAGMENTS INCASE OF BRANCH CHANGE.
                                     chats.subList(9,chats.size()).clear();
                                     notifyDataSetChanged();
 
@@ -514,6 +597,7 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                                     SessionManager.putStringInPreferences(context,"Car","vehicle_type");
                                     m.setType("user");
                                     m.setRank("top");
+                                    m.setId(9);
                                     addMessage(m);
                                     notifyDataSetChanged();
                                     dialog.dismiss();
@@ -560,6 +644,128 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
 
 
                     }
+
+
+                }
+
+
+
+                if(chats.get(position).getId()==10){
+                    if(chats.size()==11){
+                        final Dialog dialog=new Dialog(context);
+                        dialog.setContentView(R.layout.popup_car_type);
+                        dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        ImageView im1,im2;
+
+                        im1=(ImageView)dialog.findViewById(R.id.newcar);
+                        im2=(ImageView)dialog.findViewById(R.id.oldcar);
+
+
+                        im1.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("A new car!");
+                                SessionManager.putStringInPreferences(context,"New","car_type");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(11);
+                                addMessage(m);
+                                dialog.dismiss();
+                                launchCarPref();
+
+                            }
+                        });
+                        im2.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Message m = new Message();
+                                m.setMessage("A second hand car");
+                                SessionManager.putStringInPreferences(context,"Old","car_type");
+                                m.setType("user");
+                                m.setRank("top");
+                                m.setId(11);
+                                addMessage(m);
+                                dialog.dismiss();
+                                launchDOM();
+
+                            }
+                        });
+
+
+                        dialog.show();
+
+                    }else if(chats.size()>11){
+
+                        final Dialog dialog = new Dialog(context);
+                        dialog.setContentView(R.layout.popup_vehicle_select);
+                        dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        ImageView im1, im2;
+
+                        im1=(ImageView)dialog.findViewById(R.id.newcar);
+                        im2=(ImageView)dialog.findViewById(R.id.oldcar);
+
+                        im1.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(SessionManager.getStringFromPreferences(context,"car_type").equals("New")) {
+
+                                    //SUBLISTING. IMPORTANT TO REMOVE ALREADY INCLUDED FRAGMENTS INCASE OF BRANCH CHANGE.
+                                    chats.subList(11,chats.size()).clear();
+                                    notifyDataSetChanged();
+                                    Message m = new Message();
+                                    m.setMessage("A second hand car");
+                                    SessionManager.putStringInPreferences(context,"Old","car_type");
+                                    m.setType("user");
+                                    m.setRank("top");
+                                    addMessage(m);
+                                    m.setId(11);
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+                                    launchDOM();
+                                }
+                                else{
+                                    dialog.dismiss();
+
+                                }
+
+
+                            }
+                        });
+                        im2.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(SessionManager.getStringFromPreferences(context,"car_type").equals("Old")) {
+                                    chats.subList(11, chats.size()).clear();
+                                    notifyDataSetChanged();
+
+                                    Message m = new Message();
+                                    m.setMessage("A new car");
+                                    SessionManager.putStringInPreferences(context,"New","car_type");
+                                    m.setType("user");
+                                    m.setRank("top");
+                                    m.setId(11);
+                                    addMessage(m);
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+                                    launchCarPref();
+
+                                }
+                                else{
+                                    dialog.dismiss();
+
+                                }
+
+
+                            }
+                        });
+
+                        dialog.show();
+
+                    }
+
 
 
                 }
@@ -668,6 +874,29 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
     }
 
 
+    public void launchCarPref(){
+        Message m=new Message();
+        m.setMessage("Tap here to select a car!");
+        m.setType("bot");
+        m.setRank("top");
+        m.setId(12);
+        addMessage(m);      //PUSHBACK TO DATA SET.
+
+
+    }
+
+    public void launchDOM(){
+        Message m=new Message();
+        m.setMessage("Choose the date of manufacturing of the vehicle");
+        m.setType("bot");
+        m.setRank("top");
+        m.setId(12);
+        addMessage(m);      //PUSHBACK TO DATA SET.
+
+
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateLabel() {
 
@@ -685,6 +914,8 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
 
 
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void resetLabel() {
@@ -705,12 +936,15 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
     }
 
 
-    //ANIMATION FUNCTION. CHANGE THE DESIRED ANIM. AS PER REQUIREMENTS.
+    //ANIMATION FUNCTIONS. CHANGE THE DESIRED ANIM. AS PER REQUIREMENTS.
+
+    //FADE ANIMATION.
     private void setFadeAnimation(View view) {
         AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(FADE_DURATION);
         view.startAnimation(anim);
     }
+
 
     //SCALE ANIMATION.
     private void setScaleAnimation(View view,int position) {
@@ -724,7 +958,7 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
         }
     }
 
-
+    //SLIDE ANIMATION
     private void setSlideAnimation(View view,int position) {
 
         if (position > lastposition) {
@@ -734,6 +968,9 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
 
         }
     }
+
+
+
 
 
 
