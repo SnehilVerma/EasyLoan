@@ -15,18 +15,18 @@ import com.elsapp.easyloan.R;
  * Created by Rishi on 6/8/2017.
  */
 
-public class CustomGrid extends BaseAdapter {
+public class HomeGrid extends BaseAdapter {
     Context context;
     String[] strings;
     int[] ints;
 
-    public CustomGrid(Context context, String[] strings, int[] ints) {
+    public HomeGrid(Context context, String[] strings, int[] ints) {
         this.context = context;
         this.strings = strings;
         this.ints = ints;
     }
 
-    public CustomGrid(Context context, int[] ints){
+    public HomeGrid(Context context, int[] ints){
         this.context=context;
         this.ints=ints;
 

@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        recyclerView.setAdapter(new Chat_Adapter(context,chats));
+        recyclerView.setAdapter(new Chat_Adapter(context,chats,layoutManager));
 
 
 

@@ -20,6 +20,7 @@
         android:text="bot_chat_message 1"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:layout_marginRight="10dp"
         android:id="@+id/tv1"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"

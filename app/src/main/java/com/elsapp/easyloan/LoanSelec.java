@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.elsapp.easyloan.Adapter.CustomGrid;
+import com.elsapp.easyloan.Adapter.HomeGrid;
 import com.elsapp.easyloan.Utility.SessionManager;
 
 
@@ -45,7 +45,7 @@ public class LoanSelec extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        CustomGrid adapter = new CustomGrid(LoanSelec.this, pic_loans);
+        HomeGrid adapter = new HomeGrid(LoanSelec.this, pic_loans);
         grid=(GridView)findViewById(R.id.grid);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:text="Your preferred car is"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/tv1"
+
+        />
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="20dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:id="@+id/gridview"
+        android:animateLayoutChanges="true"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        >
+    </GridView>
+
+
+</LinearLayout>
