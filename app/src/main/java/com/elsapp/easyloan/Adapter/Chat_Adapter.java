@@ -1372,6 +1372,9 @@ public class Chat_Adapter extends RecyclerView.Adapter<Chat_Adapter.ViewHolder> 
                             dialog.setContentView(R.layout.popup_homemaker);
                         }
 
+                        dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        dialog.show();
 
 
 
